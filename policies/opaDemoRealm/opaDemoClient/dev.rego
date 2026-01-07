@@ -1,10 +1,10 @@
-package policies.opaDemoRealm.opaDemoClient.dev
+package opaDemoRealm.opaDemoClient.policies.dev
 
 # ============================================
 # IMPORTS - Connect to the Data Pump
 # ============================================
 
-import data.opaDemoRealm.opaDemoClient as sql
+import opaDemoRealm.opaDemoClient.data.dev as sql
 
 # ============================================
 # DEFAULT DENY
@@ -17,9 +17,9 @@ default allow := false
 # ============================================
 
 # Get user's roles
-user_roles contains role if {
-    # CHANGED: Use 'sql.user_roles' instead of 'data.user_roles'
-    some user_role in sql.user_roles
+user_role contains role if {
+    # CHANGED: Use 'sql.user_role' instead of 'data.user_role'
+    some user_role in sql.user_role
     user_role.user_id == input.user.id
     some role in sql.roles
     role.id == user_role.role_id
@@ -27,13 +27,13 @@ user_roles contains role if {
 
 # Get user's highest clearance level
 user_clearance_level := level if {
-    levels := [role.clearance_level | some role in user_roles]
+    levels := [role.clearance_level | some role in user_role]
     level := max(levels)
 }
 
 # Check if user has specific role
 has_role(role_name) if {
-    some role in user_roles
+    some role in user_role
     role.name == role_name
 }
 
@@ -41,7 +41,7 @@ has_role(role_name) if {
 user_department := dept if {
     some user in sql.users
     user.id == input.user.id
-    some dept in sql.departments
+    some dept in sql.department
     dept.id == user.department_id
 }
 
@@ -49,7 +49,7 @@ user_department := dept if {
 user_seniority := seniority if {
     some user in sql.users
     user.id == input.user.id
-    some seniority in sql.seniority_levels
+    some seniority in sql.seniority_level
     seniority.id == user.seniority_level_id
 }
 
@@ -57,7 +57,7 @@ user_seniority := seniority if {
 is_active_user if {
     some user in sql.users
     user.id == input.user.id
-    some status in sql.user_statuses
+    some status in sql.user_statuse
     status.id == user.status_id
     status.status_code == "active"
 }
@@ -362,7 +362,7 @@ allow if {
     input.action == "view"
     some user in sql.users
     user.id == input.user.id
-    some status in sql.user_statuses
+    some status in sql.user_statuse
     status.id == user.status_id
     status.status_code == "guest"
     sensitivity := resource_sensitivity_value(input.resource.type, input.resource.id)
@@ -435,7 +435,7 @@ audit_log := {
     "resource_type": input.resource.type,
     "resource_id": input.resource.id,
     "allowed": allow,
-    "roles": [role.name | some role in user_roles],
+    "roles": [role.name | some role in user_role],
     "deny_reason": deny_reason
 }
 
