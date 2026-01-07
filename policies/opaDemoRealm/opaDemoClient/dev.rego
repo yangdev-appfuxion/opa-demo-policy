@@ -4,7 +4,7 @@ package opaDemoRealm.opaDemoClient.policies.dev
 # IMPORTS - Connect to the Data Pump
 # ============================================
 
-import opaDemoRealm.opaDemoClient.data.dev as sql
+import data.opaDemoRealm.opaDemoClient.data.dev as sql
 
 # ============================================
 # DEFAULT DENY
