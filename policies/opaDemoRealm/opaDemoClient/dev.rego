@@ -1,4 +1,4 @@
-package policies.opaDemoRealm.opaDemoClient.data.dev
+package policies.opaDemoRealm.opaDemoClient.policies.dev
 
 import rego.v1
 

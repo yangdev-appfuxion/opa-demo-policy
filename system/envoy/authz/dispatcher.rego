@@ -13,6 +13,6 @@ env_name    := path_segments[3]
 
 # Delegate decision to policies
 allow if {
-    policy := data.policies[realm_name][client_name][env_name]
+    policy := data.policies[realm_name][client_name].policies[env_name]
     policy.allow
 }
