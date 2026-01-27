@@ -13,6 +13,9 @@ env_name    := path_segments[3]
 
 # Delegate decision to policies
 allow if {
-    policy := data.policies[realm_name][client_name].policies[env_name]
+    # Verify enough segments to avoid index out of bounds
+    count(path_segments) >= 4
+
+    policy := data.[realm_name][client_name].policies[env_name]
     policy.allow
 }
