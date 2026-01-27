@@ -4,18 +4,21 @@ import rego.v1
 
 default allow := false
 
-# Parse path segments: /api/{realm}/{client}/{env}/...
+# 1. Parse Path
+# Input:  /api/{realm}/{client}/{env}/...
 path_segments := split(trim(input.attributes.request.http.path, "/"), "/")
 
+# 2. Extract Dynamic Segments
 realm_name  := path_segments[1]
 client_name := path_segments[2]
 env_name    := path_segments[3]
 
-# Delegate decision to policies
+# 3. Dynamic Policy Lookup
 allow if {
-    # Verify enough segments to avoid index out of bounds
     count(path_segments) >= 4
-
-    policy := data.[realm_name][client_name].policies[env_name]
+    
+    # FIX IS HERE: No dot between 'data' and '[realm_name]'
+    policy := data[realm_name][client_name].policies[env_name]
+    
     policy.allow
 }
