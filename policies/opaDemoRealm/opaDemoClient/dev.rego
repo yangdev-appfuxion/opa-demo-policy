@@ -1,4 +1,4 @@
-package envoy.authz
+package policies.opaDemoRealm.opaDemoClient.data.dev
 
 import rego.v1
 
