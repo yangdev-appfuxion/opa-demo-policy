@@ -36,18 +36,14 @@ else := "update" if http_request.method in ["PUT", "PATCH"]
 else := "delete" if http_request.method == "DELETE"
 else := "options" if http_request.method == "OPTIONS"
 
-# 1c. Parse the Path (e.g., "/api/project/1")
-# We ignore empty strings caused by leading slashes
 path_segments := [x | some x in split(http_request.path, "/"); x != ""]
 
-# Resource Name: Assumes path structure is like ["api", "project", "1", ...]
-# We take index 1 (the second element) as the resource name.
+# Resource Name (Index 1: "project")
 resource_name := path_segments[1] if count(path_segments) >= 2
 
-# Resource ID: Assumes index 2 is the ID. We MUST convert to Number.
+# Resource ID (Index 2: "1")
 resource_id := to_number(path_segments[2]) if {
     count(path_segments) >= 3
-    # Check if it looks like a number before converting to avoid runtime errors
     regex.match(`^\d+$`, path_segments[2])
 }
 
