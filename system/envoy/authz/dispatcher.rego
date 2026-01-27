@@ -2,7 +2,11 @@ package system.envoy.authz
 
 import rego.v1
 
-default allow := true
+default allow := false
+
+allow {
+    true
+}
 
 # 1. Extract Context from Headers (Injected by Python Gateway)
 # Headers are usually lowercase in Envoy input
