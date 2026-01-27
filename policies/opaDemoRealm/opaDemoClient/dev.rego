@@ -36,15 +36,16 @@ else := "update" if http_request.method in ["PUT", "PATCH"]
 else := "delete" if http_request.method == "DELETE"
 else := "options" if http_request.method == "OPTIONS"
 
+# 1c. Parse the Path (LONG PATH VERSION)
 path_segments := [x | some x in split(http_request.path, "/"); x != ""]
 
-# Resource Name (Index 1: "project")
-resource_name := path_segments[1] if count(path_segments) >= 2
+# Resource Name (Index 5)
+resource_name := path_segments[5] if count(path_segments) >= 6
 
-# Resource ID (Index 2: "1")
-resource_id := to_number(path_segments[2]) if {
-    count(path_segments) >= 3
-    regex.match(`^\d+$`, path_segments[2])
+# Resource ID (Index 6)
+resource_id := to_number(path_segments[6]) if {
+    count(path_segments) >= 7
+    regex.match(`^\d+$`, path_segments[6])
 }
 
 # ============================================

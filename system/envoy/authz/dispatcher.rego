@@ -2,7 +2,7 @@ package system.envoy.authz
 
 import rego.v1
 
-default allow := false
+default allow := true
 
 # 1. Extract Context from Headers (Injected by Python Gateway)
 # Headers are usually lowercase in Envoy input
@@ -12,7 +12,7 @@ env_name    := input.attributes.request.http.headers["x-env"]
 
 # 2. Dynamic Policy Lookup
 allow if {
-    
+
     # Ensure headers are present
     realm_name != ""
     client_name != ""
